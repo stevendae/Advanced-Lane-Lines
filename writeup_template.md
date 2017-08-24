@@ -20,7 +20,7 @@ The goals / steps of this project are the following:
 [image1]: ./examples/undistort_output.png "Undistorted"
 [image2]: ./output_images/test3/Original_Image.jpg "Original"
 [image3]: ./output_images/test3/Distortion_Corrected_Image.jpg "Undistorted"
-[image4]: ./test_images/test1.jpg "Road Transformed"
+[image4]: ./output_images/test3/Thresholded_Binary_Image.jpg "Thresholded Binary Image"
 [image5]: ./examples/binary_combo_example.jpg "Binary Example"
 [image6]: ./examples/warped_straight_lines.jpg "Warp Example"
 [image7]: ./examples/color_fit_lines.jpg "Fit Visual"
@@ -65,9 +65,20 @@ To demonstrate this step, I will describe how I apply the distortion correction 
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+I used a combination of color and gradient thresholds to generate a binary image.
 
-![alt text][image3]
+| Threshold       | Purpose   | 
+|:-------------:|:-------------:| 
+| Directional Gradient    | Apply Sobel Operator in Either X or Y Direction     | 
+| Gradient Magnitude    | Combine Sobel Operator Product of X and Y      |
+| Gradient Direction  | Identify Edges Oriented At Particular Angle     |
+| Saturation Channel    | Identify Single Colour Objects Regardless of Lightness/Shadow    |
+| Grayscale Channel    | Identify Lane Lines via Bright Salient Appearance   |
+
+
+
+
+![alt text][image4]
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
