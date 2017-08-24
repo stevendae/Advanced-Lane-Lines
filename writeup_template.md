@@ -22,8 +22,8 @@ The goals / steps of this project are the following:
 [image3]: ./output_images/test3/Distortion_Corrected_Image.jpg "Undistorted"
 [image4]: ./output_images/test3/Thresholded_Binary_Image.jpg "Thresholded Binary Image"
 [image5]: ./output_images/test3/Perspective_Transform.jpg "Birds Eye View Image"
-[image6]: ./examples/warped_straight_lines.jpg "Warp Example"
-[image7]: ./examples/color_fit_lines.jpg "Fit Visual"
+[image6]: ./output_images/test3/Lane_Pixels_and_Fitted_Line.jpg "Lane Pixels and Polyfit"
+[image7]: ./output_images/test3/Final_Result.jpg "Final Result with Lane Marking, Curvature, and Offset"
 [image8]: ./examples/example_output.jpg "Output"
 [video1]: ./project_video.mp4 "Video"
 
@@ -98,13 +98,17 @@ This resulted in the following source and destination points:
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+The process in which I was able to identify the lane-line pixels and fit their positions with a polynomial is described in the functions titled 'find_lines' and 'linefit'. They are located in the 10th and 11th code cells, respectively. In the 'find_lines' function I begin by creating a histogram to detect the number of pixels there are in every column on the x-axis. The two peaks with the most points are the indicators that signify the base of the lanes. I then excercised a sliding window technique in which begins by creating a small rectangular window with the bottom touching the x-axis and midpoint of the base of the window positioned on the basepoint of the lane; for both lanes. I then store the indices of the pixels that exist inside the window and concatenate the list of indices to my 'global' list which indicates 'all' the indices occupied by each lane pixel. If the number of pixels counted in each window exceeds 50 then a new base is calculated which takes the mean of all the x coordinates of the pixels in the window. This process is repeated, as the windows are stacked on top of each other, until the windows reach the top of the frame. This is calculated for both the left and right lane. The numpy polyfit function is then used to calculate the polynomial coefficients of the second order polynomial for the left and right lanes. 
+
+The polynomial coefficients are then used as the input to the 'linefit' function where it returns the x coordinate for every y coordinate of the fitted line. This array is created to plot the points of the fitted line. 
+
+The result of both functions can be seen in the image below. Where the windows are in green, the left lane pixels are in red, the right lane pixels are in blue, and the fitted lines indicating the shape of the lane is in yellow.
 
 ![alt text][image5]
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+The radius of curvature of the lane and the offset position of the vehicle are calculated in the code cell titled 'Curvature' and 'Offset' in code cells number 12 and 13. The curvature is calculated by implementing the formulation described on this page[http://www.intmath.com/applications-differentiation/8-radius-curvature.php]  
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
