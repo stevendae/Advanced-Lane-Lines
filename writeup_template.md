@@ -108,7 +108,27 @@ The result of both functions can be seen in the image below. Where the windows a
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-The radius of curvature of the lane and the offset position of the vehicle are calculated in the code cell titled 'Curvature' and 'Offset' in code cells number 12 and 13. The curvature is calculated by implementing the formulation described on this page[http://www.intmath.com/applications-differentiation/8-radius-curvature.php]  
+The radius of curvature of the lane and the offset position of the vehicle are calculated in the code cell titled 'Curvature' and 'Offset' in code cells number 12 and 13. The curvature is calculated by implementing the formulation described on this [page](http://www.intmath.com/applications-differentiation/8-radius-curvature.php) The code was performed as such:
+
+```python
+def Curvature(ploty, leftx, rightx):    
+    y_eval = np.max(ploty)
+    ym_per_pix = 30/720 # meters per pixel in y dimension
+    xm_per_pix = 3.7/700 # meters per pixel in x dimension
+    # Fit new polynomials to x,y in world space
+    left_fit_cr = np.polyfit(ploty*ym_per_pix, leftx*xm_per_pix, 2)
+    right_fit_cr = np.polyfit(ploty*ym_per_pix, rightx*xm_per_pix, 2)
+    # Calculate the new radii of curvature
+    left_curverad = ((1 + (2*left_fit_cr[0]*y_eval*ym_per_pix + left_fit_cr[1])**2)**1.5) / np.absolute(2*left_fit_cr[0])
+    right_curverad = ((1 + (2*right_fit_cr[0]*y_eval*ym_per_pix + right_fit_cr[1])**2)**1.5) / np.absolute(2*right_fit_cr[0])
+    # Now our radius of curvature is in meters
+    #radius = (left_curverad+right_curverad)/2 
+    #print(left_curverad, 'm', right_curverad, 'm')
+    # Example values: 632.1 m    626.2 m
+    
+    return left_curverad, right_curverad
+```
+The result provides the radius of a curve in pixels. 
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
