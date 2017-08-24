@@ -53,6 +53,8 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 
 ### Pipeline (single images)
 
+#### The code that was developed to realize the objectives in this section (single images) is titled "Pipeline_Test_Images.ipynb"
+
 #### 1. Provide an example of a distortion-corrected image.
 
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one. The first image is the test image titled test3.jpg in the test_images folder. The second is it's distortion corrected equivalent.:
@@ -65,7 +67,7 @@ To demonstrate this step, I will describe how I apply the distortion correction 
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
-I used a combination of color and gradient thresholds to generate a binary image.
+I used a combination of color and gradient thresholds to generate a binary image. This function can be found in the code cell titled "Color and Gradient Threshold". 
 
 | Threshold       | Purpose   | 
 |:-------------:|:-------------:| 
@@ -75,14 +77,13 @@ I used a combination of color and gradient thresholds to generate a binary image
 | Saturation Channel    | Identify Single Colour Objects Regardless of Lightness/Shadow    |
 | Grayscale Channel    | Identify Lane Lines via Bright Salient Appearance   |
 
-
-
+The final binary result was achieved by incorporating the pixels that are within the threshold ranges for both x and y gradients or both gradient magnitude and direction. Both grayscale and saturation channels were considered in the final output to maximize visibility.
 
 ![alt text][image4]
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
+The code for my perspective transform includes a function called `corners_unwarp()`, which appears in the 9th code cell of the IPython notebook.  The `corners_unwarp()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
 
 ```python
 src = np.float32(
