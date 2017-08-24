@@ -21,7 +21,7 @@ The goals / steps of this project are the following:
 [image2]: ./output_images/test3/Original_Image.jpg "Original"
 [image3]: ./output_images/test3/Distortion_Corrected_Image.jpg "Undistorted"
 [image4]: ./output_images/test3/Thresholded_Binary_Image.jpg "Thresholded Binary Image"
-[image5]: ./examples/binary_combo_example.jpg "Binary Example"
+[image5]: ./output_images/test3/Perspective_Transform.jpg "Birds Eye View Image"
 [image6]: ./examples/warped_straight_lines.jpg "Warp Example"
 [image7]: ./examples/color_fit_lines.jpg "Fit Visual"
 [image8]: ./examples/example_output.jpg "Output"
@@ -83,33 +83,18 @@ The final binary result was achieved by incorporating the pixels that are within
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `corners_unwarp()`, which appears in the 9th code cell of the IPython notebook.  The `corners_unwarp()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
-
-```python
-src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
-dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
-```
+The code for my perspective transform includes a function called `corners_unwarp()`, which appears in the 9th code cell of the IPython notebook.  The `corners_unwarp()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points. The function excercises two Open.CV2 methods which include cv2.getPerspectiveTransform and cv2.warpPerspective. The former method returns a transform matrix that allows the image to warp into a birds eye perspective and the latter method performs the warp computation. I chose the source and destination points by method of trial and error, and from insight from my working community until I achieved a result where the lane lines appeared relatively parallel.
 
 This resulted in the following source and destination points:
 
 | Source        | Destination   | 
 |:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
+| 190, 720      | 190, 720        | 
+| 548, 480      | 190, 0      |
+| 740, 480     | 1130, 0      |
+| 1130, 720      | 1130, 720        |
 
-I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
-
-![alt text][image4]
+![alt text][image5]
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
