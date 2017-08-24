@@ -108,7 +108,7 @@ The result of both functions can be seen in the image below. Where the windows a
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-The radius of curvature of the lane and the offset position of the vehicle are calculated in the code cell titled 'Curvature' and 'Offset' in code cells number 12 and 13. The curvature is calculated by implementing the formulation described on this [page](http://www.intmath.com/applications-differentiation/8-radius-curvature.php) The code was performed as such:
+The radius of curvature of the lane and the offset position of the vehicle are calculated in the code cell titled 'Curvature' and 'Offset' in code cells number 12 and 13. The curvature is calculated by implementing the formulation described on this [page] (http://www.intmath.com/applications-differentiation/8-radius-curvature.php). The code to calculate the radius is described in the following section. The conversion factors are provided in the project description where they are originally extracted from the physical dimensions of the width of a lane and the length of a lane line, 30m and 3.7m respectively.
 
 ```python
 def Curvature(ploty, leftx, rightx):    
@@ -128,7 +128,29 @@ def Curvature(ploty, leftx, rightx):
     
     return left_curverad, right_curverad
 ```
-The result provides the radius of a curve in pixels. 
+The result provides the radius of a curve in metres.
+
+The offset of the car's position relative to the center of the lane is calculated in the code cell titled 'Offset'. This calculation begins in similar fashion with the 'find_lines' function where a histogram is used to calculate the x coordinates of the base of the lane lines. Once the bases are identified they are averaged to identify the midpoint of the lane. The midpoint is subtracted from the midpoint of the frame (assumed to be center of car), to get the offset distance in pixels. This value is then multiplied by the pixel to meter conversion factor of 0.0041. The conversion factor was a result of calculating an average ratio from the width of the lane (3.7m) to its pixel-equivalent length from the test images set. 
+
+```python
+def Offset(top_down):
+    
+    histogram = np.sum(top_down[top_down.shape[0]//2:,:], axis=0)
+    # Create an output image to draw on and visualize the result
+    out_img = np.dstack((top_down, top_down, top_down))*255
+    # Find the peak of the left and right halves of the histogram
+    # These will be the starting point for the left and right lines
+    midpoint = np.int(histogram.shape[0]/2)
+    leftx_base = np.argmax(histogram[:midpoint])
+    rightx_base = np.argmax(histogram[midpoint:]) + midpoint
+    midlane = (leftx_base+rightx_base)/2
+    midcar = (top_down.shape[1])/2
+    px_2_m = 0.004111
+    
+    offset = px_2_m*(np.absolute(midlane-midcar))
+    
+    return offset
+```
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
