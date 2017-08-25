@@ -104,7 +104,7 @@ The polynomial coefficients are then used as the input to the 'linefit' function
 
 The result of both functions can be seen in the image below. Where the windows are in green, the left lane pixels are in red, the right lane pixels are in blue, and the fitted lines indicating the shape of the lane is in yellow.
 
-![alt text][image5]
+![alt text][image6]
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
@@ -154,9 +154,9 @@ def Offset(top_down):
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+I implemented this step in the section of the IPython notebook titled 'Drawing'. It takes the indices of the fitted polynomial and fills the road section in the image using the OpenCV function cv2.fillPoly. 
 
-![alt text][image6]
+![alt text][image7]
 
 ---
 
@@ -164,7 +164,7 @@ I implemented this step in lines # through # in my code in `yet_another_file.py`
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./test_videos_output/project_video.mp4)
 
 ---
 
@@ -173,3 +173,31 @@ Here's a [link to my video result](./project_video.mp4)
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
 Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+
+The approach I took in the video pipeline is to evaluate how confident my latest calculation was in identifying the lane lines, wherby the confidence is measured in binary fashion, in order to determine the operations of the current frame. This is explained by the following process.
+
+##### Pipeline
+1. Apply Distortion Correction
+2. Convert Distortion Corrected Image into a Thresholded Binary Image
+3. Were there left and right lanes detected in the previous frame?
+    a) If yes
+        i) Warp Frame to Bird's Eye Perspective
+        ii) Look in local region of interest, bounded by polyfit line of previous frame, for lane pixels
+        iii) If coefficients of new polyfit equal zero, revert to previous frame coefficients and set current lane detection to false
+    b) If no
+        i) Mask Region of Interest
+        ii) Perform Hough Transform
+        iii) If no lines are detected in Hough Transform revert to previous frame coefficients and set current lane detection to false
+        iiii) If lines are detected, perform Find_Lines() function which identifies the base of the lane and pixels of the lane
+4. Append lane polynomial coefficients to historical array of 5 of the most recent fits
+5. Take average of historical array to use as input to calculate the Curvature and Offset
+6. Draw lane identified map to original image and add curvature radius and offset captions to image.
+7. Update line values
+
+##### Vulnerabilities
+1. Static region of interest mask - the ROI mask have fixed vertices that were identified by analyzing the test video. In the case of turns where the lane lines pass the boundary of the ROI it will be removed from the region of analysis.
+
+##### Areas of Improvement
+1. Implement a continous range of confidence speculation via fuzzy or bayesian inference rather than a binary check of the lane lines in previous frame.
+2. Develop multiple paths of identification based on measures of a ranged confidence
+2. Differentiate between lane lines with road borders, shadows, and different color lanes. Currently unable to give correct identification of lane lines in challenge videos.
